@@ -3,6 +3,22 @@ const chatbot = document.getElementById('chatbot');
 const conversation = document.getElementById('conversation');
 const inputForm = document.getElementById('input-form');
 const inputField = document.getElementById('input-field');
+const buttonChatbot = document.getElementById('open-close-chatbot')
+let chatBotContainer = document.getElementById('chatbot-container')
+
+buttonChatbot.addEventListener('click', function(event) {
+	let buttonIcon = document.querySelector('#open-close-chatbot > i');
+	let data = "hide"
+	if (chatBotContainer.classList.contains('visible')) {
+		chatBotContainer.classList.remove('visible');
+		buttonIcon.className = "fa fa-comment"
+	} else {
+		chatBotContainer.classList.add('visible');
+		buttonIcon.className = "fa fa-window-close"
+		data = "show"
+	} 
+	window.parent.postMessage(data, "http://localhost:8080")
+});
 
 // Add event listener to input form
 inputForm.addEventListener('submit', function(event) {
@@ -18,8 +34,9 @@ inputForm.addEventListener('submit', function(event) {
 
   // Add user input to conversation
   let message = document.createElement('div');
+	message.setAttribute('sentTime', currentTime)
   message.classList.add('chatbot-message', 'user-message');
-  message.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${input}</p>`;
+  message.innerHTML = `<p class="chatbot-text triangle-right right-top">${input}</p>`;
   conversation.appendChild(message);
 
   // Generate chatbot response
@@ -27,8 +44,12 @@ inputForm.addEventListener('submit', function(event) {
 
   // Add chatbot response to conversation
   message = document.createElement('div');
+	message.setAttribute('sentTime', currentTime)
   message.classList.add('chatbot-message','chatbot');
-  message.innerHTML = `<p class="chatbot-text" sentTime="${currentTime}">${response}</p>`;
+	message.innerHTML = `<div alt="Card image cap" class="chat-askllm-bubble prompt-answer-llm"> <div alt="Card image cap"
+		class="icon-chat-llm icon-chat-eden"> <img height="30px" width="30px" src="assets/img/icons/EdenColors.svg" alt
+		style="filter: brightness(0) invert(1)" /> </div> </div>
+		<p class="chatbot-text triangle-left left-top">${response}</p>`
   conversation.appendChild(message);
   message.scrollIntoView({behavior: "smooth"});
 });
@@ -55,3 +76,8 @@ function generateResponse(input) {
     return responses[Math.floor(Math.random() * responses.length)];
   }
   
+
+function	chatbotClickOpenClose(event) {
+	event.preventDefault()
+	console.log('ZEBI')
+}
